@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const { width } = Dimensions.get("window");
 
@@ -14,26 +16,8 @@ const AboutScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* ✅ MODERN NAVBAR */}
-      <View style={styles.navbar}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.logo}>AutoHub</Text>
-          <Text style={styles.logoSuffix}>Nepal</Text>
-        </View>
-        <View style={styles.navLinks}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <Text style={styles.link}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("About")}>
-            <Text style={[styles.link, styles.activeLink]}>About Us</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={styles.link}>Register</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.link}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Use the separated Header component */}
+      <Header navigation={navigation} activeRoute="About" />
 
       {/* ✅ HERO SECTION */}
       <View style={styles.heroSection}>
@@ -142,71 +126,7 @@ const AboutScreen = ({ navigation }) => {
       </View>
 
       {/* ✅ MODERN FOOTER */}
-      <View style={styles.footer}>
-        <View style={styles.footerContent}>
-          <View style={styles.footerBrand}>
-            <View style={styles.logoContainer}>
-              <Text style={styles.footerLogo}>AutoHub</Text>
-              <Text style={styles.footerLogoSuffix}>Nepal</Text>
-            </View>
-            <Text style={styles.footerSubtitle}>
-              Transforming automotive services through technology and trust
-            </Text>
-            <View style={styles.socialRow}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>📘</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>📸</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>🐦</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
-                <Text style={styles.socialIcon}>🔗</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.footerGrid}>
-            <View style={styles.footerColumn}>
-              <Text style={styles.footerHeader}>Quick Links</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                <Text style={styles.footerLink}>Home</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("About")}>
-                <Text style={styles.footerLink}>About Us</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                <Text style={styles.footerLink}>Register</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.footerLink}>Login</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.footerColumn}>
-              <Text style={styles.footerHeader}>Our Services</Text>
-              <Text style={styles.footerText}>Car Maintenance</Text>
-              <Text style={styles.footerText}>Emergency Assistance</Text>
-              <Text style={styles.footerText}>Spare Parts</Text>
-              <Text style={styles.footerText}>Insurance Help</Text>
-            </View>
-
-            <View style={styles.footerColumn}>
-              <Text style={styles.footerHeader}>Contact Info</Text>
-              <Text style={styles.footerText}>Kathmandu, Nepal</Text>
-              <Text style={styles.footerText}>+977 9800000000</Text>
-              <Text style={styles.footerText}>info@autohubnepal.com</Text>
-              <Text style={styles.footerText}>Sun-Fri: 7AM - 7PM</Text>
-            </View>
-          </View>
-        </View>
-        
-        <View style={styles.footerBottom}>
-          <Text style={styles.copyright}>© 2023 AutoHubNepal. All rights reserved.</Text>
-        </View>
-      </View>
+      <Footer/>
     </ScrollView>
   );
 };
@@ -219,47 +139,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   // ✅ MODERN NAVBAR
-  navbar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  logoContainer: {
-    flexDirection: "row",
-    alignItems: "baseline",
-  },
-  logo: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#0066FF",
-  },
-  logoSuffix: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FF6B00",
-  },
-  navLinks: {
-    flexDirection: "row",
-  },
-  link: {
-    marginHorizontal: 12,
-    color: "#555",
-    fontWeight: "500",
-    fontSize: 15,
-  },
-  activeLink: {
-    color: "#0066FF",
-    fontWeight: "700",
-  },
   // ✅ HERO SECTION
   heroSection: {
     flexDirection: "row",
@@ -421,83 +300,5 @@ const styles = StyleSheet.create({
     color: "#0066FF",
     fontWeight: "700",
     fontSize: 16,
-  },
-  // ✅ MODERN FOOTER
-  footer: {
-    backgroundColor: "#1a1a1a",
-    paddingTop: 30,
-  },
-  footerContent: {
-    paddingHorizontal: 20,
-  },
-  footerBrand: {
-    marginBottom: 25,
-  },
-  footerLogo: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#fff",
-  },
-  footerLogoSuffix: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FF6B00",
-  },
-  footerSubtitle: {
-    color: "#aaa",
-    marginTop: 8,
-    marginBottom: 15,
-    fontSize: 14,
-  },
-  socialRow: {
-    flexDirection: "row",
-  },
-  socialButton: {
-    backgroundColor: "#333",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  socialIcon: {
-    fontSize: 18,
-  },
-  footerGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginBottom: 25,
-  },
-  footerColumn: {
-    width: width / 3 - 20,
-    marginBottom: 20,
-  },
-  footerHeader: {
-    color: "#fff",
-    fontWeight: "700",
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  footerLink: {
-    color: "#aaa",
-    marginBottom: 10,
-    fontSize: 14,
-  },
-  footerText: {
-    color: "#aaa",
-    marginBottom: 10,
-    fontSize: 14,
-  },
-  footerBottom: {
-    borderTopWidth: 1,
-    borderTopColor: "#333",
-    padding: 15,
-    alignItems: "center",
-  },
-  copyright: {
-    color: "#888",
-    fontSize: 13,
   },
 });
