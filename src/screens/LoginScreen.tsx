@@ -9,6 +9,9 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -30,32 +33,15 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const openSocialLink = (URL) => {
+  const openSocialLink = (URL: string) => {
     Linking.openURL(URL).catch(err => console.error("Failed to open URL:", err));
   };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* ✅ MODERN NAVBAR */}
-      <View style={styles.navbar}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.logo}>AutoHub<Text style={styles.logoAccent}>Nepal</Text></Text>
-        </View>
-        <View style={styles.navLinks}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <Text style={styles.navLink}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("About")}>
-            <Text style={styles.navLink}>About Us</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={styles.navLink}>Register</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={[styles.navLink, styles.activeNavLink]}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+     {/* Use the separated Header component */}
+      <Header navigation={navigation} activeRoute="Login" />
 
       {/* ✅ MODERN HEADER SECTION */}
       <View style={styles.pageHeader}>
@@ -136,101 +122,26 @@ const LoginScreen = ({ navigation }) => {
 
           {/* Social login buttons */}
           <View style={styles.socialButtonsContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.socialButton, styles.googleButton]}
               onPress={() => openSocialLink('https://google.com')}
             >
-              <Text style={[styles.socialButtonText, styles.googleButtonText]}>Google</Text>
+              <Icon name="google" size={22} color="#DB4437" />
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.socialButton, styles.facebookButton]}
               onPress={() => openSocialLink('https://facebook.com')}
             >
-              <Text style={[styles.socialButtonText, styles.facebookButtonText]}>Facebook</Text>
+              <Icon name="facebook" size={22} color="#4267B2" />
             </TouchableOpacity>
-          </View>
 
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.registerLink}>Register now</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
 
       {/* ✅ MODERN FOOTER */}
-      <View style={styles.footer}>
-        <View style={styles.footerContent}>
-          <View style={styles.footerBrand}>
-            <Text style={styles.footerTitle}>AutoHub<Text style={styles.footerTitleAccent}>Nepal</Text></Text>
-            <Text style={styles.footerSubtitle}>
-              Experience automotive excellence in Nepal
-            </Text>
-            
-            <View style={styles.socialLinks}>
-              <TouchableOpacity 
-                style={styles.socialIcon}
-                onPress={() => openSocialLink('https://autohubnepal.com')}
-              >
-                <Text style={styles.socialIconText}>🌐</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.socialIcon}
-                onPress={() => openSocialLink('https://facebook.com/autohubnepal')}
-              >
-                <Text style={styles.socialIconText}>📘</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.socialIcon}
-                onPress={() => openSocialLink('https://instagram.com/autohubnepal')}
-              >
-                <Text style={styles.socialIconText}>📸</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.socialIcon}
-                onPress={() => openSocialLink('https://linkedin.com/company/autohubnepal')}
-              >
-                <Text style={styles.socialIconText}>🔗</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.footerSections}>
-            <View style={styles.footerSection}>
-              <Text style={styles.footerSectionTitle}>Quick Links</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                <Text style={styles.footerLink}>Home</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("About")}>
-                <Text style={styles.footerLink}>About Us</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                <Text style={styles.footerLink}>Register Business</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.footerLink}>Login</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.footerSection}>
-              <Text style={styles.footerSectionTitle}>Contact Us</Text>
-              <Text style={styles.contactText}>Kathmandu, Nepal</Text>
-              <Text style={styles.contactText}>+977 9888888888</Text>
-              <Text style={styles.contactText}>info@autohubnepal.com</Text>
-              <Text style={styles.contactText}>Sun-Fri: 10AM - 6PM</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.footerBottom}>
-          <Text style={styles.copyright}>© 2023 AutoHub Nepal. All rights reserved.</Text>
-        </View>
-      </View>
+    <Footer />
     </ScrollView>
   );
 };
@@ -244,47 +155,6 @@ const styles = StyleSheet.create({
   },
   
   // Navbar
-  navbar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  logoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  logo: { 
-    fontSize: 22, 
-    fontWeight: "800", 
-    color: "#1F2937" 
-  },
-  logoAccent: {
-    color: "#2563EB"
-  },
-  navLinks: { 
-    flexDirection: "row" 
-  },
-  navLink: { 
-    marginHorizontal: 12, 
-    color: "#6B7280", 
-    fontWeight: "500",
-    fontSize: 14
-  },
-  activeNavLink: {
-    color: "#2563EB",
-    fontWeight: "600"
-  },
-  
   // Page Header
   pageHeader: {
     padding: 32,
@@ -443,31 +313,32 @@ const styles = StyleSheet.create({
     color: "#6B7280",
     fontSize: 14,
     fontWeight: "500"
-  },
-  socialButtonsContainer: {
+  },socialButtonsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 24
+    justifyContent: "space-around",
+    marginBottom: 24,
   },
+
   socialButton: {
-    flex: 1,
-    paddingVertical: 12,
+    width: 60,
+    height: 50,
     borderRadius: 12,
     alignItems: "center",
-    marginHorizontal: 6,
+    justifyContent: "center",
     borderWidth: 1,
     borderColor: "#E5E7EB",
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
-  socialButtonText: {
-    fontSize: 14,
-    fontWeight: "500",
+
+  facebookButton: {
+  borderColor: "#4267B2", // Facebook blue border
   },
-  googleButtonText: {
-    color: "#DB4437",
-  },
-  facebookButtonText: {
-    color: "#4267B2",
+  googleButton: {
+    borderColor: "#DB4437", // Google red border
   },
   registerContainer: {
     flexDirection: "row",
@@ -484,78 +355,4 @@ const styles = StyleSheet.create({
   },
   
   // Footer
-  footer: {
-    backgroundColor: "#1F2937",
-    paddingTop: 40,
-  },
-  footerContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 32
-  },
-  footerBrand: {
-    marginBottom: 32
-  },
-  footerTitle: {
-    fontWeight: "700",
-    fontSize: 24,
-    color: "#F9FAFB",
-    marginBottom: 8
-  },
-  footerTitleAccent: {
-    color: "#3B82F6"
-  },
-  footerSubtitle: {
-    color: "#9CA3AF",
-    fontSize: 14,
-    marginBottom: 20
-  },
-  socialLinks: {
-    flexDirection: "row"
-  },
-  socialIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#374151",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12
-  },
-  socialIconText: {
-    fontSize: 18,
-  },
-  footerSections: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  footerSection: {
-    flex: 1
-  },
-  footerSectionTitle: {
-    color: "#F9FAFB",
-    fontWeight: "600",
-    fontSize: 16,
-    marginBottom: 16
-  },
-  footerLink: {
-    color: "#D1D5DB",
-    fontSize: 14,
-    marginBottom: 12
-  },
-  contactText: {
-    color: "#D1D5DB",
-    fontSize: 14,
-    marginBottom: 12
-  },
-  footerBottom: {
-    borderTopWidth: 1,
-    borderTopColor: "#374151",
-    paddingVertical: 20,
-    paddingHorizontal: 24,
-    alignItems: "center"
-  },
-  copyright: {
-    color: "#9CA3AF",
-    fontSize: 12
-  }
 });
