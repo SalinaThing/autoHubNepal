@@ -1,275 +1,293 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Alert,
   ScrollView,
-} from "react-native";
+  Alert,
+  StyleSheet,
+} from 'react-native';
+import Footer from '../components/Footer';
 
-const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+type FormSectionProps = {
+  title: string;
+  children: React.ReactNode;
+};
 
-  const handleRegister = () => {
-    if (!name || !email || !phone || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill all fields.");
-      return;
+const FormSection: React.FC<FormSectionProps> = ({ title, children }) => (
+  <View style={styles.sectionContainer}>
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+    </View>
+    <View style={styles.sectionBody}>{children}</View>
+  </View>
+);
+
+const RegisterBusinessPage: React.FC = () => {
+  const [formState, setFormState] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    garageName: '',
+    description: '',
+    category: '',
+    phone: '',
+    whatsapp: '',
+    emailAddress: '',
+    website: '',
+  });
+
+  const handleChange = (name: string, value: string) => {
+    setFormState(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(
+        'http://10.0.2.2:5000/api/register-business',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formState),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        Alert.alert('✅ Success', data.message);
+        setFormState({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          garageName: '',
+          description: '',
+          category: '',
+          phone: '',
+          whatsapp: '',
+          emailAddress: '',
+          website: '',
+        });
+      } else {
+        Alert.alert('❌ Error', data.message || 'Something went wrong');
+      }
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('❌ Network Error', error.message || 'Server not reachable');
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert("Error", "Enter a valid email address.");
-      return;
-    }
-
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(phone)) {
-      Alert.alert("Error", "Enter a valid 10-digit phone number.");
-      return;
-    }
-
-    if (password.trim() !== confirmPassword.trim()) {
-      Alert.alert("Error", "Passwords do not match.");
-      return;
-    }
-
-    Alert.alert(
-      "Success",
-      `Welcome ${name}! Your account has been created for AutoHubNepal.`
-    );
-
-    // Reset form fields
-    setName("");
-    setEmail("");
-    setPhone("");
-    setPassword("");
-    setConfirmPassword("");
-
-    // Navigate to Home after successful registration
-    navigation.navigate("Home");
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Navbar */}
-      <View style={styles.navbar}>
-        <Text style={styles.logo}>AutoHubNepal</Text>
-        <View style={styles.navLinks}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <Text style={styles.link}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("About")}>
-            <Text style={styles.link}>About Us</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={styles.link}>Register Business</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.link}>Login</Text>
-          </TouchableOpacity>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
+      <Text style={styles.mainTitle}>Register Your Workshop</Text>
+
+      {/* Login Information */}
+      <FormSection title="Login Information">
+        <View style={styles.twoCol}>
+          <TextInput
+            style={styles.input}
+            placeholder="Username *"
+            value={formState.username}
+            onChangeText={text => handleChange('username', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email *"
+            keyboardType="email-address"
+            value={formState.email}
+            onChangeText={text => handleChange('email', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password *"
+            secureTextEntry
+            value={formState.password}
+            onChangeText={text => handleChange('password', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password *"
+            secureTextEntry
+            value={formState.confirmPassword}
+            onChangeText={text => handleChange('confirmPassword', text)}
+          />
         </View>
-      </View>
+      </FormSection>
 
-      {/* Register Form */}
-      <View style={styles.formWrapper}>
-        <Text style={styles.title}>Register - AutoHubNepal</Text>
-
+      {/* Business Information */}
+      <FormSection title="Business Information">
         <TextInput
           style={styles.input}
-          placeholder="Full Name"
-          value={name}
-          onChangeText={setName}
+          placeholder="Garage Name *"
+          value={formState.garageName}
+          onChangeText={text => handleChange('garageName', text)}
         />
-
+        <TextInput
+          style={[styles.input, { height: 100 }]}
+          multiline
+          placeholder="Description *"
+          value={formState.description}
+          onChangeText={text => handleChange('description', text)}
+        />
         <TextInput
           style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
+          placeholder="Category (e.g. Repair / Car Wash / Painting)"
+          value={formState.category}
+          onChangeText={text => handleChange('category', text)}
         />
+        <View style={styles.uploadBox}>
+          <Text style={{ color: '#666' }}>Business Photo Upload Placeholder</Text>
+        </View>
+      </FormSection>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="phone-pad"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerTitle}>AutoHub Nepal</Text>
-        <Text style={styles.footerSubtitle}>
-          Experience in automotive excellence
+      {/* Location Information */}
+      <FormSection title="Location Information">
+        <Text style={{ marginBottom: 10, color: '#555' }}>
+          A map placeholder would be here to select location.
         </Text>
-
-        <View style={styles.socialRow}>
-          <Text style={styles.socialIcon}>🌐</Text>
-          <Text style={styles.socialIcon}>📘</Text>
-          <Text style={styles.socialIcon}>📸</Text>
-          <Text style={styles.socialIcon}>🔗</Text>
+        <View style={styles.mapPlaceholder}>
+          <Text style={{ color: '#999' }}>Map Placeholder</Text>
         </View>
+        <TouchableOpacity style={styles.locationButton}>
+          <Text style={styles.locationButtonText}>📍 Use Current Location</Text>
+        </TouchableOpacity>
+      </FormSection>
 
-        <View style={styles.footerRow}>
-          <View style={styles.footerCol}>
-            <Text style={styles.footerHeader}>Quick Links</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-              <Text style={styles.footerText}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("About")}>
-              <Text style={styles.footerText}>About Us</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.footerText}>Register Business</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.footerText}>Login</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.footerCol}>
-            <Text style={styles.footerHeader}>Contact Us</Text>
-            <Text style={styles.footerText}>Kathmandu, Nepal</Text>
-            <Text style={styles.footerText}>+977 9888888888</Text>
-            <Text style={styles.footerText}>info@autohubnepal.com</Text>
-            <Text style={styles.footerText}>Sun-Fri: 10AM - 6PM</Text>
-          </View>
+      {/* Contact Information */}
+      <FormSection title="Contact Information">
+        <View style={styles.twoCol}>
+          <TextInput
+            style={styles.input}
+            placeholder="Phone Number *"
+            keyboardType="phone-pad"
+            value={formState.phone}
+            onChangeText={text => handleChange('phone', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="WhatsApp Number"
+            keyboardType="phone-pad"
+            value={formState.whatsapp}
+            onChangeText={text => handleChange('whatsapp', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email Address"
+            keyboardType="email-address"
+            value={formState.emailAddress}
+            onChangeText={text => handleChange('emailAddress', text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Website URL"
+            value={formState.website}
+            onChangeText={text => handleChange('website', text)}
+          />
         </View>
-      </View>
+      </FormSection>
+
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitText}>Register Now</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
 
-export default RegisterScreen;
+export default RegisterBusinessPage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#f3f4f6',
+    paddingHorizontal: 16,
+    paddingTop: 20,
   },
-  navbar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 15,
-    backgroundColor: "#f8f9fa",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+  mainTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
   },
-  logo: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#007bff",
+  sectionContainer: {
+    marginBottom: 20,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    elevation: 2,
   },
-  navLinks: {
-    flexDirection: "row",
+  sectionHeader: {
+    backgroundColor: '#dc2626',
+    padding: 12,
   },
-  link: {
-    marginLeft: 15,
-    fontSize: 16,
-    color: "#007bff",
-    fontWeight: "500",
+  sectionTitle: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: '600',
   },
-  formWrapper: {
-    padding: 20,
-    alignItems: "center",
+  sectionBody: {
+    padding: 16,
   },
-  title: {
-    fontSize: 26,
-    marginBottom: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#007bff",
+  twoCol: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   input: {
-    width: "100%",
-    height: 50,
+    backgroundColor: '#fff',
+    borderColor: '#d1d5db',
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
+    flexBasis: '48%',
+  },
+  uploadBox: {
+    height: 100,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderStyle: 'dashed',
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  mapPlaceholder: {
+    height: 180,
+    backgroundColor: '#e5e7eb',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
+    marginBottom: 12,
+  },
+  locationButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  locationButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  submitButton: {
+    backgroundColor: '#16a34a',
+    paddingVertical: 16,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+  submitText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: '700',
     fontSize: 16,
   },
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#28a745",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#f8f9fa",
-    marginTop: 20,
-  },
-  footerTitle: {
-    fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 5,
-    color: "#007bff",
-  },
-  footerSubtitle: {
-    textAlign: "center",
-    color: "#555",
-    marginBottom: 10,
-    fontSize: 14,
-  },
-  socialRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 10,
-  },
-  socialIcon: {
-    fontSize: 20,
-    marginHorizontal: 8,
-  },
-  footerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    marginTop: 10,
-  },
-  footerCol: { flex: 1, minWidth: "45%", marginBottom: 15 },
-  footerHeader: { fontWeight: "bold", marginBottom: 8, fontSize: 16 },
-  footerText: { fontSize: 14, color: "#555", marginBottom: 4 },
 });
