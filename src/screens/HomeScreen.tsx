@@ -234,6 +234,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     { id: 6, name: "MG Service", emoji: "🔩" },
   ];
 
+  
   // Sample data for lubricant brands
   const lubricantBrands = [
     { id: 1, name: "Mobil 1", desc: "Premium Engine Oil", emoji: "🛢️" },
